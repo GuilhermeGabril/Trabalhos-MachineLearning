@@ -47,14 +47,13 @@ mar = ['o','^','s','x','+','*','8']
 clabel = [col[i % len(col)] for i in y_ac]
 mlabel = [mar[i % len(mar)] for i in y_ac]
 
-#  Gráfico PCA
-plt.figure(figsize=(10,7))
+# === Gráfico PCA ===
+plt.figure(figsize=(10, 7))
 for i in range(len(x1)):
     plt.scatter(x1[i], y1[i], marker=mlabel[i], s=25, c=clabel[i])
-    plt.text(x1[i]+0.02, y1[i], str(y_ac[i]), ha='left', va='center', fontsize=7)
 
-plt.xlabel('Componente 1 expressa ' + str("{:.2f}".format(100*pca.explained_variance_ratio_[0])) + '% da variabilidade')
-plt.ylabel('Componente 2 expressa ' + str("{:.2f}".format(100*pca.explained_variance_ratio_[1])) + '% da variabilidade')
+plt.xlabel('Componente 1 expressa ' + str("{:.2f}".format(100 * pca.explained_variance_ratio_[0])) + '% da variabilidade')
+plt.ylabel('Componente 2 expressa ' + str("{:.2f}".format(100 * pca.explained_variance_ratio_[1])) + '% da variabilidade')
 plt.title('PCA + Agglomerative Clustering - Steel Industry')
 plt.grid(True)
 plt.tight_layout()
