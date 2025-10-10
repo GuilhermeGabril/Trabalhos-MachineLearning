@@ -47,7 +47,7 @@ mar = ['o','^','s','x','+','*','8']
 clabel = [col[i % len(col)] for i in y_ac]
 mlabel = [mar[i % len(mar)] for i in y_ac]
 
-# === Gráfico PCA ===
+#Gráfico PCA
 plt.figure(figsize=(10, 7))
 for i in range(len(x1)):
     plt.scatter(x1[i], y1[i], marker=mlabel[i], s=25, c=clabel[i])
