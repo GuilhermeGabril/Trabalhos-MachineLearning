@@ -32,45 +32,42 @@ print("Variância explicada pelas 3 primeiras componentes principais:")
 for i, var in enumerate(pca_check.explained_variance_ratio_):
     print(f"Componente {i+1}: {var*100:.2f}%")
 
-# Aplicar Agglomerative Clustering fixo 
-n_clusters = 3
-clustering = AgglomerativeClustering(n_clusters=n_clusters)
-labels = clustering.fit_predict(X_scaled)
-
-# Avaliação inicial
-ch = calinski_harabasz_score(X_scaled, labels)
-print(f"\nCalinski-Harabasz Score com {n_clusters} clusters: {ch:.3f}")
-
-# Grid Search para avaliação 
+# Grid Search para encontrar os melhores parâmetros do Agglomerative
 param_grid = {
     "n_clusters": [2, 3, 4, 5],
     "linkage": ["ward", "complete", "average", "single"]
 }
 
-lista_parametros_testados = []
+best_score = -1
+best_param = None
 
 for params in ParameterGrid(param_grid):
     try:
         clustering_temp = AgglomerativeClustering(**params)
         labels_temp = clustering_temp.fit_predict(X_scaled)
         score_temp = calinski_harabasz_score(X_scaled, labels_temp)
-        lista_parametros_testados.append((params, score_temp))
+        if score_temp > best_score:
+            best_score = score_temp
+            best_param = params
     except Exception:
         continue
 
-print("\nParâmetros testados e seus Calinski-Harabasz Scores:")
-for p, s in lista_parametros_testados:
-    print(p, f"CH Score: {s:.3f}")
+print("\nMelhores parâmetros encontrados:", best_param)
+print(f"Melhor Calinski-Harabasz Score: {best_score:.3f}")
 
-# PCA final apenas para visualização 
+# 6. Aplicar Agglomerative com os melhores parâmetros
+clustering_best = AgglomerativeClustering(**best_param)
+labels_best = clustering_best.fit_predict(X_scaled)
+
+# PCA final apenas para visualização (2 componentes)
 pca_vis = PCA(n_components=2)
 X_pca_vis = pca_vis.fit_transform(X_scaled)
 
-# Gráfico dos clusters
+#Gráfico dos clusters
 plt.figure(figsize=(10, 7))
 col = ['r','b','g','m','y','c','k']
 for i in range(len(X_pca_vis)):
-    plt.scatter(X_pca_vis[i,0], X_pca_vis[i,1], color=col[labels[i] % len(col)], s=25)
+    plt.scatter(X_pca_vis[i,0], X_pca_vis[i,1], color=col[labels_best[i] % len(col)], s=25)
 
 plt.xlabel(f'Componente 1 ({pca_vis.explained_variance_ratio_[0]*100:.2f}% variância)')
 plt.ylabel(f'Componente 2 ({pca_vis.explained_variance_ratio_[1]*100:.2f}% variância)')
