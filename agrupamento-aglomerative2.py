@@ -56,15 +56,15 @@ for params in ParameterGrid(param_grid):
 print("\nMelhores parâmetros encontrados:", best_param)
 print(f"Melhor Calinski-Harabasz Score: {best_score:.3f}")
 
-# 6. Aplicar Agglomerative 
+# Aplicar Agglomerative 
 clustering_best = AgglomerativeClustering(**best_param)
 labels_best = clustering_best.fit_predict(X_selected)
 
-# 7. PCA 
+# PCA 
 pca_vis = PCA(n_components=2)
 X_pca_vis = pca_vis.fit_transform(X_selected)
 
-# 8. Gráfico dos clusters
+# Gráfico dos clusters
 plt.figure(figsize=(10, 7))
 col = ['r','b','g','m','y','c','k']
 for i in range(len(X_pca_vis)):
