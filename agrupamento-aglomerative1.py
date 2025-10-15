@@ -25,16 +25,24 @@ X = dados[feature_names].values
 # Padronização dos dados
 X_scaled = StandardScaler().fit_transform(X)
 
-# PCA inicial para verificar componentes principais
+# PCA 
 pca_check = PCA(n_components=3)
 X_pca_check = pca_check.fit_transform(X_scaled)
 print("Variância explicada pelas 3 primeiras componentes principais:")
 for i, var in enumerate(pca_check.explained_variance_ratio_):
     print(f"Componente {i+1}: {var*100:.2f}%")
 
+# Componentes principais (contribuição das variáveis)
+print("\nContribuição das variáveis para cada componente:")
+for i, component in enumerate(pca_check.components_):
+    print(f"Componente {i+1}:")
+    for feature, value in zip(feature_names, component):
+        print(f"  {feature}: {value:.3f}")
+
+        
 # Grid Search para encontrar os melhores parâmetros do Agglomerative
 param_grid = {
-    "n_clusters": [2, 3, 4, 5],
+    "n_clusters": [2, 3, 4, 5, 6, 7],
     "linkage": ["ward", "complete", "average", "single"]
 }
 
@@ -59,8 +67,8 @@ print(f"Melhor Calinski-Harabasz Score: {best_score:.3f}")
 clustering_best = AgglomerativeClustering(**best_param)
 labels_best = clustering_best.fit_predict(X_scaled)
 
-# PCA final apenas para visualização (2 componentes)
-pca_vis = PCA(n_components=2)
+# PCA final apenas para visualização
+pca_vis = PCA(n_components=3)
 X_pca_vis = pca_vis.fit_transform(X_scaled)
 
 # Gráfico dos clusters

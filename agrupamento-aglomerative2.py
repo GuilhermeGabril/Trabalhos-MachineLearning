@@ -35,7 +35,7 @@ print("Características selecionadas:", selected_features)
 
 # Grid Search para encontrar melhores parâmetros do Agglomerative
 param_grid = {
-    "n_clusters": [2, 3, 4, 5],
+    "n_clusters": [2, 3, 4, 5, 6, 7],
     "linkage": ["ward", "complete", "average", "single"]
 }
 
@@ -60,9 +60,19 @@ print(f"Melhor Calinski-Harabasz Score: {best_score:.3f}")
 clustering_best = AgglomerativeClustering(**best_param)
 labels_best = clustering_best.fit_predict(X_selected)
 
-# PCA 
-pca_vis = PCA(n_components=2)
+# PCA final (após o Agglomerative)
+pca_vis = PCA(n_components=3)
 X_pca_vis = pca_vis.fit_transform(X_selected)
+
+print("\nVariância explicada pelas 3 primeiras componentes principais (após o Agglomerative):")
+for i, var in enumerate(pca_vis.explained_variance_ratio_):
+    print(f"Componente {i+1}: {var*100:.2f}%")
+
+print("\nContribuição das variáveis selecionadas para cada componente:")
+for i, component in enumerate(pca_vis.components_):
+    print(f"Componente {i+1}:")
+    for feature, value in zip(selected_features, component):
+        print(f"  {feature}: {value:.3f}")
 
 # Gráfico dos clusters
 plt.figure(figsize=(10, 7))
